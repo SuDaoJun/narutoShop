@@ -332,7 +332,7 @@ router.post("/payMent", function (req,res,next) {
             result:''
         });
      }else{
-       var address = '',goodsList = [];
+       var address = '',goodsList = [],change = [];
        //获取当前用户的地址信息
        doc.addressList.forEach((item)=>{
           if(addressId==item.addressId){
@@ -359,7 +359,8 @@ router.post("/payMent", function (req,res,next) {
           orderStatus:'1',
           createDate:createDate
        };
-       // doc.orderList.push(order);
+       change.push(order);
+       doc.orderList = change;
        doc.save(function (err2,doc1) {
           if(err2){
             res.json({
@@ -376,8 +377,6 @@ router.post("/payMent", function (req,res,next) {
               result:{
                 orderId:order.orderId,
                 orderTotal:order.orderTotal,
-                a:doc.orderList,
-                b:order
               }
             });
           }
@@ -398,6 +397,8 @@ router.get("/orderDetail", function (req,res,next) {
           });
       }else{
          var orderList = userInfo.orderList;
+         var streetName = orderList[0].addressInfo.streetName;
+         var tel = orderList[0].addressInfo.tel;
          if(orderList.length>0){
            var orderTotal = 0;
            orderList.forEach((item)=>{
@@ -412,7 +413,9 @@ router.get("/orderDetail", function (req,res,next) {
                msg:'',
                result:{
                  orderId:orderId,
-                 orderTotal:orderTotal
+                 orderTotal:orderTotal,
+                 streetName:streetName,
+                 tel:tel
                }
              })
            }else{
